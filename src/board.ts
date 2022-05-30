@@ -26,7 +26,7 @@ function piese_pp(piese: Piese) {
 }
 
 function pos_vs(pos: Pos) {
-  return [files.indexOf(pos[0]), ranks.indexOf(pos[1])]
+  return [files.indexOf(pos[0]), 7-ranks.indexOf(pos[1])]
 }
 
 
