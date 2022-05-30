@@ -19,7 +19,12 @@ yarn link vchessboard
 cp node_modules/vchessboard/dist/bundle.css assets/
 ```
 
-Alternatively check out the css files in the [src/index.css] and [src/theme.css].
+Alternatively check out the css files in the [src/index.css](src/index.css) and [src/theme.css](src/theme.css).
+
+```html
+  <!-- Include is2d klass to pickup piece styling -->
+  <div class='is2d' id='app'></div>
+```
 
 ```js
 
