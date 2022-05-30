@@ -110,7 +110,8 @@ function make_board(board: Board) {
 
   let m_pieses = createMemo(() => {
     let _poss_by_piece = _m_poss_by_piece()
-    return mapArray(_m_pieces, _ => make_piece(board, ..._poss_by_piece.find(_a => _a[0] === _)))()
+    let _used_poss = []
+    return mapArray(_m_pieces, _ => make_piece(board, ..._poss_by_piece.find(_a => _a[0] === _ && !_used_poss.includes(_a) && _used_poss.push(_a))))()
   })
 
   let released_positions = new Map<Piece, Array<Pos>>()
