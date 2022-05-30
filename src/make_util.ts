@@ -63,8 +63,9 @@ export function make_position(x, y) {
   }
 }
 
+/* https://gist.github.com/gre/1650294 */
 function ease(t: number) {
-  return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+  return t < .5 ? 2 * t * t : -1 + (4 - 2 * t) * t
 }
 
 function lerp(a: number, b: number, t: number) {

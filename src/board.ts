@@ -11,6 +11,12 @@ const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
 const ranks = ['1', '2', '3', '4', '5', '6', '7', '8']
 const roles = ['k', 'q', 'r', 'b', 'n', 'p']
 
+const poss = files.flatMap(file => ranks.map(rank => file + rank))
+
+function square_pp(square: Square) {
+  return square.split('@')
+}
+
 function make_piese(piece: Piece, pos: Pos) {
   return [piece, pos].join('@')
 }
@@ -21,6 +27,13 @@ function piese_pp(piese: Piese) {
 
 function pos_vs(pos: Pos) {
   return [files.indexOf(pos[0]), ranks.indexOf(pos[1])]
+}
+
+
+function make_pos_style(_pos: Position) {
+  return {
+    transform: `translate(calc(100% * ${_pos.x}), calc(100% * ${_pos.y}))`
+  }
 }
 
 export class Board {
@@ -41,9 +54,12 @@ export class Board {
     this.a_squares.squares = squares
   }
 
+  get empties() {
+    return this.a_empties()
+  }
+
   constructor() {
     this.a_board = make_board(this)
-
     this.a_squares = make_squares(this)
   }
 
@@ -51,12 +67,36 @@ export class Board {
 
 function make_squares(board: Board) {
 
-  let a_squares = createSignal()
-  let m_squares = createMemo(() => [])
+  let _squares = createSignal()
+  let m_squares = createMemo(mapArray(_squares[0], _ => make_square(board, _)))
 
   return {
     get squares() {
       return m_squares()
+    },
+    set squares(squares: Array<Square>) {
+      owrite(_squares, squares)
+    }
+  }
+}
+
+function make_square(board: Board, square: Square) {
+
+  let [color, pos] = square_pp(square)
+  let _pos = make_position(...pos_vs(pos))
+
+  let m_style = createMemo(() => make_pos_style(_pos))
+
+  let m_klass = createMemo(() => [
+    color
+  ].join(' '))
+
+  return {
+    get klass() {
+      return m_klass()
+    },
+    get style() {
+      return m_style()
     }
   }
 }
@@ -128,11 +168,7 @@ function make_piece(board: Board, piece: Piece, pos: Pos) {
   const m_role_klass = role_klasses[piece[1]]
   const m_klass = createMemo(() => [m_color_klass, m_role_klass].join(' '))
 
-  const m_style = createMemo(() => {
-    return {
-      transform: `translate(calc(100% * ${_pos.x}), calc(100% * ${_pos.y}))`
-    }
-  })
+  const m_style = createMemo(() => make_pos_style(_pos))
 
   return {
     settle_loop(dt, dt0, i) {

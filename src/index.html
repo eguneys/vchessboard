@@ -24,7 +24,7 @@ body, input {
   justify-content: center;
   position: relative;
   width: min(100vw, calc(100vh * 16/9));
-  aspect-ratio: 16/9;
+  aspect-ratio: 4/3;
 }
     </style>
   </head>
@@ -35,6 +35,7 @@ body, input {
       document.addEventListener("DOMContentLoaded", () => {
               let api = VChessboard(document.getElementById('app'), {})
               api.pieses = ['wr@b4', 'bk@a1']
+        api.squares = ['dark white@b1', 'black@c3', 'orange@h8', 'black@c3', 'black@c3', 'black@c3', 'orange@c3', 'orange@h8']
       })
     </script>
   </body>

@@ -18,6 +18,9 @@ export default function VChessboard(element: HTMLElement, options = {}) {
     },
     set pieses(pieses: Array<Piese>) {
       board.pieses = pieses
+    },
+    set squares(squares: Array<Square>) {
+      board.squares = squares
     }
   }
 }
