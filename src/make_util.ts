@@ -1,8 +1,6 @@
 import { mapArray, createMemo, createSignal, batch } from 'solid-js'
 import { read, write, owrite } from './play'
 
-import { Vec2 } from 'soli2d'
-
 export function make_array<A, B>(arr: Array<A>, map: (_: A) => B) {
   let _arr = createSignal(arr, { equals: false })
 
@@ -49,23 +47,28 @@ export function make_position(x, y) {
 
   let m_p = createMemo(() => point(read(_x), read(_y)))
 
-  let m_vs = createMemo(() => Vec2.make(read(_x), read(_y)))
-
   return {
     get point() { return m_p() },
     get x() { return read(_x) },
     set x(v: number) { owrite(_x, v) },
     get y() { return read(_y) },
     set y(v: number) { owrite(_y, v) },
-    set vs(vs: Vec2) { batch(() => {
-      owrite(_x, _ => lerp(_, vs.x)), owrite(_y, _ => lerp(_, vs.y))
-     })
+    lerp(x: number, y: number, t: number = 0.5) {
+      owrite(_x, _ => lerp(_, x, ease(t)))
+      owrite(_y, _ => lerp(_, y, ease(t)))
     },
-    get vs() { return m_vs() },
     get clone() {
       return make_position(read(_x), read(_y))
     }
   }
+}
+
+function ease(t: number) {
+  return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+}
+
+function lerp(a: number, b: number, t: number) {
+  return a + (b - a) * t
 }
 
 export type Point = string

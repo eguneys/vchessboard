@@ -1,4 +1,6 @@
 import './index.css'
+import './theme.css'
+import '../assets/companion.css'
 import { render } from 'solid-js/web'
 
 import App from './view'

@@ -1,0 +1,18 @@
+vchessboard {
+  position: absolute;
+  height: 100%;
+  aspect-ratio: 1/1;
+  overflow: hidden;
+}
+
+pieses {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+pieses piese {
+  position: absolute;
+  width: calc(100% / 8);
+  aspect-ratio: 1/1;
+}
