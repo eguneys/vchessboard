@@ -11,4 +11,13 @@ export default function VChessboard(element: HTMLElement, options = {}) {
 
   let board = new Board()
   render(App(board), element)
+
+  return {
+    get pieses() {
+      return board.pieses
+    },
+    set pieses(pieses: Array<Piese>) {
+      board.pieses = pieses
+    }
+  }
 }

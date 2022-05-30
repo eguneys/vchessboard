@@ -4,14 +4,18 @@ const App = board => () => {
 
   return (<>
     <vchessboard>
-     <pieses>
-       <For each={board.pieses}>{ (piese, i) =>
-         <piese class={piese.klass} style={piese.style}/>
+      <squares>
+       <For each={board.squares}>{ (square, i) =>
+         <square class={square.klass} style={square.style}/>
        }</For>
-     </pieses>
-    </vchessboard>
-      </>)
-
+      </squares>
+      <pieses>
+        <For each={board.pieses}>{ (piese, i) =>
+          <piese class={piese.klass} style={piese.style}/>
+        }</For>
+      </pieses>
+     </vchessboard>
+     </>)
 }
 
 export default App

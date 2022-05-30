@@ -33,17 +33,37 @@ export class Board {
     this.a_board.pieses = pieses
   }
 
+  get squares() {
+    return this.a_squares.squares
+  }
+
+  set squares(squares: Array<Square>) {
+    this.a_squares.squares = squares
+  }
+
   constructor() {
     this.a_board = make_board(this)
 
-    this.pieses = [make_piese('wr', 'a4')]
+    this.a_squares = make_squares(this)
   }
 
 }
 
+function make_squares(board: Board) {
+
+  let a_squares = createSignal()
+  let m_squares = createMemo(() => [])
+
+  return {
+    get squares() {
+      return m_squares()
+    }
+  }
+}
+
 function make_board(board: Board) {
 
-  let a_pieses = createSignal([])
+  let a_pieses = createSignal()
 
   let _m_poss_by_piece = createMemo(mapArray(a_pieses[0], piese_pp))
   let _m_pieces = createMemo(() => _m_poss_by_piece().map(_ => _[0]))
