@@ -148,11 +148,17 @@ function make_board(board: Board) {
     let [piece, pos] = _.split('@')
 
     let v_pos = chess_pos_vs(pos)
+    let v_pos0 = v_pos.clone
     let instant_track = pos.includes('~')
+    if (instant_track) {
+      if (board.orientation === 'w') {
+        v_pos.y = 7 - v_pos.y
+      }
+    }
     let _p = sticky_pos.acquire_pos(piece, Vec2.make(v_pos.x, v_pos.y), instant_track)
     
 
-    let res = make_piece(board, _, v_pos, _p)
+    let res = make_piece(board, _, v_pos0, _p)
 
 
     onCleanup(() => {
