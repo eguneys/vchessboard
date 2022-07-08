@@ -1,5 +1,5 @@
 import { ticks } from './shared'
-import { onCleanup, mapArray, createSignal, createMemo, createEffect } from 'solid-js'
+import { on, onCleanup, mapArray, createSignal, createMemo, createEffect } from 'solid-js'
 import { make_array, make_position } from './make_util'
 import { loop_for, read, write, owrite } from './play'
 import { make_sticky_pos } from './make_sticky'
@@ -141,27 +141,36 @@ function make_board(board: Board) {
 
   let _pieses = createSignal()
 
-  let sticky_pos = make_sticky_pos((p: OPiese, v: Vec2) => make_position(v.x, v.y))
+  let sticky_pos = make_sticky_pos((p: OPiese, v: Vec2) => make_position(v.x, v.y), _ => {
+    _.x = -8
+    _.y = -8
+  })
   pieces.forEach(_ => poss.forEach(() => sticky_pos.release_pos(_, make_position(-8, -8))))
 
-  let m_pieses = createMemo(mapArray(() => read(_pieses)?.map(_ => [board.orientation, _]), ([orientation, _]) => {
+  let m_pieses = createMemo(mapArray(() => read(_pieses)?.map(_ => [board.orientation, _]), ([orientation, _], i) => {
     let [piece, pos] = _.split('@')
 
     let v_pos = chess_pos_vs(pos)
     if (orientation === 'w') {
       v_pos.y = 7 - v_pos.y
     }
-    let instant_track = pos.includes('~')
+    let instant_track = false && pos.includes('~')
+    if (instant_track) {
+      read(_pieses)[i()] = _.replace('~', '')
+    }
     let _p = sticky_pos.acquire_pos(piece, Vec2.make(v_pos.x, v_pos.y), instant_track)
     
     let res = make_piece(board, _, v_pos, _p)
 
 
     onCleanup(() => {
-      console.log('release', _, _p.vs)
       sticky_pos.release_pos(piece, _p)
     })
     return res
+  }))
+
+  createEffect(on(m_pieses, () => {
+    sticky_pos.reset_fix_all()
   }))
 
   return {
@@ -189,7 +198,7 @@ function make_piece(board: Board, piece: Piece, v_pos, _pos: Pos) {
     let _pos0 = _pos.clone
     let _v_pos = v_pos
 
-    let cancel = loop_for(ticks.sixth, (dt, dt0, _it) => {
+    let cancel = loop_for(ticks.half, (dt, dt0, _it) => {
       _pos.lerp_from0(_pos0, _v_pos, 0.1 + _it * 0.9)
     })
     onCleanup(() => {

@@ -37,14 +37,49 @@ body, input {
               let api = VChessboard(document.getElementById('app'), {})
 
               let files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-              //api.pieses = files.flatMap(file => [`wp@${file}2`, `bp@${file}7`])
+              let pawns = files.flatMap(file => [`bk@${file}8`, `bp@${file}7~`])
 
-              api.pieses = ['wb@c2~', 'wb@d3']
+
+              let replay =[ 
+                      ['wp@e2', 'wp@f2', 'wp@f3', 'wp@g2', 'wp@h2', 'wp@g3~', 'wp@f1', 'wp@g1'],
+              ['wp@e2', 'wp@f2', 'wp@f3', 'wp@g2', 'wp@h2', 'wp@g3~', 'wp@f1', 'wp@g1'],
+              ['wp@e2', 'wp@f2~', 'wp@f3', 'wp@g2', 'wp@h2', 'wp@g3', 'wp@f1', 'wp@g1'],
+              ['wp@e2', 'wp@f2', 'wp@f3', 'wp@g2', 'wp@h2', 'wp@g3~', 'wp@f1', 'wp@g1'],
+              ['wp@e2', 'wp@f2', 'wp@f3', 'wp@g2', 'wp@h2', 'wp@g3~', 'wp@f1', 'wp@g1'],
+              ['wp@e2', 'wp@f2', 'wp@f3', 'wp@h2', 'wp@g3', 'wp@f1', 'wp@g1'],
+              ['wp@e2', 'wp@f2', 'wp@f3', 'wp@h2', 'wp@f1', 'wp@g1'],
+              ['wp@e2', 'wp@f2', 'wp@h2', 'wp@f1', 'wp@g1'],
+              ['wp@e2', 'wp@f2', 'wp@f1', 'wp@g1'],
+              ['wp@e2', 'wp@f1', 'wp@g1'],
+              ['wp@f1', 'wp@g1']]
+
+
+              function step(arr) {
+
+                      let res = arr.pop()
+                      if (!res) {
+                              return
+                            }
+
+                      setTimeout(() => {
+                              api.pieses = res
+                              step(arr)
+                            }, 100)
+                    }
+
+              step(replay.reverse())
+
+              let ors = ['w', 'b']
+              let i = 0
+              setInterval(() => {
+                      api.orientation = ors[i]
+                      i = (i + 1) % ors.length
+                    }, 500)
 
               setTimeout(() => {
-                      api.pieses = ['wb@c2', 'wb@d3']
-                setTimeout(() => {
                   api.orientation = 'b'
+                //      api.pieses = ['wb@c2', 'wb@d3']
+                setTimeout(() => {
                   //api.pieses = ['wb@c2', 'wb@d3']
                 }, 2000)
                }, 1000)

@@ -2,7 +2,7 @@ import { on, createEffect, createSignal, createMemo } from 'solid-js'
 import { read, write, owrite } from './play'
 import { Vec2 } from 'soli2d'
 
-export function make_sticky_pos<Item>(make_position: (item: Item, v: Vec2) => Pos) {
+export function make_sticky_pos<Item>(make_position: (item: Item, v: Vec2) => Pos, f_reset: (_: Pos) => void) {
 
   let released_positions = new Map<Item, Array<Pos>>()
 
@@ -29,6 +29,11 @@ export function make_sticky_pos<Item>(make_position: (item: Item, v: Vec2) => Po
   }
 
   return {
+    reset_fix_all() {
+      for (let poss of released_positions.values()) {
+        poss.forEach(f_reset)
+      }
+    },
     release_immediate,
     acquire_pos,
     release_pos(item: Item, pos: Position) {
