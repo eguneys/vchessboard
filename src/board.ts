@@ -154,7 +154,7 @@ function make_board(board: Board) {
     if (orientation === 'w') {
       v_pos.y = 7 - v_pos.y
     }
-    let instant_track = false && pos.includes('~')
+    let instant_track = pos.includes('~')
     if (instant_track) {
       read(_pieses)[i()] = _.replace('~', '')
     }
