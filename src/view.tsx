@@ -10,7 +10,7 @@ const App = board => () => {
         }</Index>
       </files>
       <ranks>
-        <Index each={['8', '7', '6', '5', '4', '3', '2', '1']}>{ (rank, i) =>
+        <Index each={board.ranks}>{ (rank, i) =>
           <rank>{rank()}</rank>
         }</Index>
       </ranks>

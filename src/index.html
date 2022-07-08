@@ -35,7 +35,16 @@ body, input {
 
       document.addEventListener("DOMContentLoaded", () => {
               let api = VChessboard(document.getElementById('app'), {})
-              api.pieses = ['wr@b4', 'bk@a1', 'wr@d4']
+
+              let files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+              api.pieses = files.flatMap(file => [`wp@${file}2`, `bp@${file}7`])
+
+              setTimeout(() => {
+                      api.orientation = 'b'
+                      setTimeout(() => {
+                              api.pieses = ['wp@e4~i']
+                            })
+                    }, 1000)
         api.squares = ['dark white@b1', 'black@c3', 'orange@h8', 'black@c3', 'black@c3', 'black@c3', 'orange@c3', 'orange@h8']
       })
     </script>

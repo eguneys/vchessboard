@@ -21,6 +21,9 @@ export default function VChessboard(element: HTMLElement, options = {}) {
     },
     set squares(squares: Array<Square>) {
       board.squares = squares
+    },
+    set orientation(color: Color) {
+      board.orientation = color
     }
   }
 }
