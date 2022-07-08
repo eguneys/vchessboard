@@ -94,7 +94,17 @@ export class Board {
 function make_squares(board: Board) {
 
   let _squares = createSignal()
-  let m_squares = createMemo(mapArray(_squares[0], _ => make_square(board, _)))
+  let m_squares = createMemo(mapArray(() => read(_squares)?.map(_ => [board.orientation, _]), ([orientation, _]) => {
+
+    let [klass, pos] = _.split('@')
+
+    let v_pos = chess_pos_vs(pos)
+    if (orientation === 'w') {
+      v_pos.y = 7 - v_pos.y
+    }
+
+    return make_square(board, _, v_pos)
+  }))
 
   return {
     get squares() {
@@ -106,10 +116,10 @@ function make_squares(board: Board) {
   }
 }
 
-function make_square(board: Board, square: Square) {
+function make_square(board: Board, square: Square, v_pos: Vec2) {
 
   let [color, pos] = square_pp(square)
-  let _pos = make_position(...pos_vs(pos))
+  let _pos = make_position(v_pos.x, v_pos.y)
 
   let m_style = createMemo(() => make_pos_style(_pos))
 
