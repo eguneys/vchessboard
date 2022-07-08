@@ -39,13 +39,15 @@ body, input {
               let files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
               //api.pieses = files.flatMap(file => [`wp@${file}2`, `bp@${file}7`])
 
-              api.pieses = []
+              api.pieses = ['wb@c2~', 'wb@d3']
 
               setTimeout(() => {
-                      setTimeout(() => {
-                              api.pieses = ['wp@e1~']
-                            })
-                    }, 1000)
+                      api.pieses = ['wb@c2', 'wb@d3']
+                setTimeout(() => {
+                  api.orientation = 'b'
+                  //api.pieses = ['wb@c2', 'wb@d3']
+                }, 2000)
+               }, 1000)
         api.squares = ['dark white@b1', 'black@c3', 'orange@h8', 'black@c3', 'black@c3', 'black@c3', 'orange@c3', 'orange@h8']
       })
     </script>

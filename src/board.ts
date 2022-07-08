@@ -144,24 +144,21 @@ function make_board(board: Board) {
   let sticky_pos = make_sticky_pos((p: OPiese, v: Vec2) => make_position(v.x, v.y))
   pieces.forEach(_ => poss.forEach(() => sticky_pos.release_pos(_, make_position(-8, -8))))
 
-  let m_pieses = createMemo(mapArray(() => read(_pieses), _ => {
+  let m_pieses = createMemo(mapArray(() => read(_pieses)?.map(_ => [board.orientation, _]), ([orientation, _]) => {
     let [piece, pos] = _.split('@')
 
     let v_pos = chess_pos_vs(pos)
-    let v_pos0 = v_pos.clone
-    let instant_track = pos.includes('~')
-    if (instant_track) {
-      if (board.orientation === 'w') {
-        v_pos.y = 7 - v_pos.y
-      }
+    if (orientation === 'w') {
+      v_pos.y = 7 - v_pos.y
     }
+    let instant_track = pos.includes('~')
     let _p = sticky_pos.acquire_pos(piece, Vec2.make(v_pos.x, v_pos.y), instant_track)
     
-
-    let res = make_piece(board, _, v_pos0, _p)
+    let res = make_piece(board, _, v_pos, _p)
 
 
     onCleanup(() => {
+      console.log('release', _, _p.vs)
       sticky_pos.release_pos(piece, _p)
     })
     return res
@@ -187,21 +184,13 @@ function make_piece(board: Board, piece: Piece, v_pos, _pos: Pos) {
 
   const m_style = createMemo(() => make_pos_style(_pos))
 
-  const m_v_pos = createMemo(() => {
-    let _v_pos = v_pos.clone
-    if (board.orientation === 'w') {
-      _v_pos.y = 7 - _v_pos.y
-    }
-    return _v_pos
-  })
-
 
   createEffect(() => {
     let _pos0 = _pos.clone
-    let _v_pos = m_v_pos()
+    let _v_pos = v_pos
 
-    let cancel = loop_for(ticks.thirds, (dt, dt0, _it) => {
-      _pos.lerp_from0(_pos0, _v_pos, 0.2 + _it * 0.8)
+    let cancel = loop_for(ticks.sixth, (dt, dt0, _it) => {
+      _pos.lerp_from0(_pos0, _v_pos, 0.1 + _it * 0.9)
     })
     onCleanup(() => {
       cancel()
