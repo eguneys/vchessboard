@@ -25,6 +25,9 @@ export default function VChessboard(element: HTMLElement, options = {}) {
     },
     set orientation(color: Color) {
       board.orientation = color
+    },
+    set instant_track(i_track: ITrack) {
+      board.a_board.instant_track = i_track
     }
   }
 }

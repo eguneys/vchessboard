@@ -23,23 +23,9 @@ const pieses = poss.flatMap(pos => pieces.map(piece => [piece, pos].join('@')))
 const chess_pos_vs = pos => 
 Vec2.make(files.indexOf(pos[0]), ranks.indexOf(pos[1]))
 
-
-function square_pp(square: Square) {
-  return square.split('@')
+const i_vpos_vs = (instant_v_pos: string) => {
+  return Vec2.make(...instant_v_pos.split('-').map(_ => parseFloat(_)))
 }
-
-function make_piese(piece: Piece, pos: Pos) {
-  return [piece, pos].join('@')
-}
-
-function piese_pp(piese: Piese) {
-  return piese.split('@')
-}
-
-function pos_vs(pos: Pos) {
-  return [files.indexOf(pos[0]), 7-ranks.indexOf(pos[1])]
-}
-
 
 function make_pos_style(_pos: Position) {
   return {
@@ -118,7 +104,7 @@ function make_squares(board: Board) {
 
 function make_square(board: Board, square: Square, v_pos: Vec2) {
 
-  let [color, pos] = square_pp(square)
+  let [color, pos] = square.split('@')
   let _pos = make_position(v_pos.x, v_pos.y)
 
   let m_style = createMemo(() => make_pos_style(_pos))
@@ -139,6 +125,9 @@ function make_square(board: Board, square: Square, v_pos: Vec2) {
 
 function make_board(board: Board) {
 
+
+  let _instant_track = createSignal()
+
   let _pieses = createSignal()
 
   let free = [...Array(64).keys()].map(_ => make_position(-8, -8))
@@ -153,11 +142,18 @@ function make_board(board: Board) {
     if (orientation === 'w') {
       v_pos.y = 7 - v_pos.y
     }
-    let instant_track = pos.includes('~')
+    let __instant_track = read(_instant_track)
+    let [instant_pos, instant_v_pos] = __instant_track?.split('@') || []
+    let instant_track = instant_pos === pos
+
+    let _p = sticky_pos.acquire_pos(piece, Vec2.make(v_pos.x, v_pos.y), !!instant_track)
+
+
     if (instant_track) {
-      read(_pieses)[i()] = _.replace('~', '')
+      _p.vs = i_vpos_vs(instant_v_pos)
     }
-    let _p = sticky_pos.acquire_pos(piece, Vec2.make(v_pos.x, v_pos.y), instant_track)
+    console.log(i_vpos_vs(instant_v_pos), _p.vs)
+
     let res = make_piece(board, _, v_pos, _p)
 
 
@@ -172,6 +168,9 @@ function make_board(board: Board) {
   }))
 
   return {
+    set instant_track(i_track: ITrack) {
+      owrite(_instant_track, i_track)
+    },
     set pieses(pieses: Array<Piese>) {
       owrite(_pieses, pieses)
     },

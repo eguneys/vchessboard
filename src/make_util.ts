@@ -15,6 +15,12 @@ export function make_position(x, y) {
     set x(v: number) { owrite(_x, v) },
     get y() { return read(_y) },
     set y(v: number) { owrite(_y, v) },
+    set vs(vs: Vec2) {
+      batch(() => {
+        this.x = vs.x
+        this.y = vs.y
+      })
+    },
     lerp(x: number, y: number, t: number = 0.5) {
       owrite(_x, _ => rlerp(_, x, ease(t)))
       owrite(_y, _ => rlerp(_, y, ease(t)))
