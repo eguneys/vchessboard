@@ -141,11 +141,10 @@ function make_board(board: Board) {
 
   let _pieses = createSignal()
 
-  let sticky_pos = make_sticky_pos((p: OPiese, v: Vec2) => make_position(v.x, v.y), _ => {
-    _.x = -8
-    _.y = -8
-  })
-  pieces.forEach(_ => poss.forEach(() => sticky_pos.release_pos(_, make_position(-8, -8))))
+  let free = [...Array(64).keys()].map(_ => make_position(-8, -8))
+  let sticky_pos = make_sticky_pos(free)
+
+  poss.forEach(_ => sticky_pos.release_pos(_, make_position(-8, -8)))
 
   let m_pieses = createMemo(mapArray(() => read(_pieses)?.map(_ => [board.orientation, _]), ([orientation, _], i) => {
     let [piece, pos] = _.split('@')
@@ -159,11 +158,13 @@ function make_board(board: Board) {
       read(_pieses)[i()] = _.replace('~', '')
     }
     let _p = sticky_pos.acquire_pos(piece, Vec2.make(v_pos.x, v_pos.y), instant_track)
+    console.log('acquire', _p.vs, _p.y)
     
     let res = make_piece(board, _, v_pos, _p)
 
 
     onCleanup(() => {
+      console.log('release', _, _p.vs.vs)
       sticky_pos.release_pos(piece, _p)
     })
     return res
@@ -192,7 +193,6 @@ function make_piece(board: Board, piece: Piece, v_pos, _pos: Pos) {
   const m_klass = createMemo(() => [m_color_klass, m_role_klass].join(' '))
 
   const m_style = createMemo(() => make_pos_style(_pos))
-
 
   createEffect(() => {
     let _pos0 = _pos.clone
