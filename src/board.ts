@@ -158,13 +158,10 @@ function make_board(board: Board) {
       read(_pieses)[i()] = _.replace('~', '')
     }
     let _p = sticky_pos.acquire_pos(piece, Vec2.make(v_pos.x, v_pos.y), instant_track)
-    console.log('acquire', _p.vs, _p.y)
-    
     let res = make_piece(board, _, v_pos, _p)
 
 
     onCleanup(() => {
-      console.log('release', _, _p.vs.vs)
       sticky_pos.release_pos(piece, _p)
     })
     return res

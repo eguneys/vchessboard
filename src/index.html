@@ -77,19 +77,21 @@ body, input {
                             }, 100)
                     }
 
-              step(replay.reverse())
+              //step(replay.reverse())
 
               let ors = ['w', 'b']
               let i = 0
 
+              /*
               setInterval(() => {
                       i++
                       api.orientation = ors[i % ors.length]
                     }, 500)
+     */
 
               setTimeout(() => {
-                  //api.orientation = 'b'
-                //      api.pieses = ['wb@c2', 'wb@d3']
+                  api.orientation = 'b'
+                  api.pieses = ['wb@c2', 'wb@d3~']
                 setTimeout(() => {
                   //api.pieses = ['wb@c2', 'wb@d3']
                 }, 2000)

@@ -22,7 +22,12 @@ export function make_sticky_pos<Item>(free: Array<Pos>) {
       _.sort((a, b) => b.vs.distance(v) - a.vs.distance(v))
       return _.pop()
     } else {
-      return free.pop()
+      let res = free.pop()
+      if (instant_track) {
+        res.x = v.x
+        res.y = v.y
+      }
+      return res
     }
   }
 
