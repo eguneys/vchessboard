@@ -22,6 +22,10 @@ empties div {
   aspect-ratio: 1/1;
 }
 
+pieses piese {
+  background-size: cover;
+}
+
 squares square {
   border-radius: 8px;
 }
