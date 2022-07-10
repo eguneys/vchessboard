@@ -24,7 +24,7 @@ const chess_pos_vs = pos =>
 Vec2.make(files.indexOf(pos[0]), ranks.indexOf(pos[1]))
 
 const i_vpos_vs = (instant_v_pos: string) => {
-  return Vec2.make(...instant_v_pos.split('-').map(_ => parseFloat(_)))
+  return Vec2.make(...instant_v_pos.split(';').map(_ => parseFloat(_)))
 }
 
 function make_pos_style(_pos: Position) {
@@ -133,8 +133,6 @@ function make_board(board: Board) {
   let free = [...Array(64).keys()].map(_ => make_position(-8, -8))
   let sticky_pos = make_sticky_pos(free)
 
-  poss.forEach(_ => sticky_pos.release_pos(_, make_position(-8, -8)))
-
   let m_pieses = createMemo(mapArray(() => read(_pieses)?.map(_ => [board.orientation, _]), ([orientation, _], i) => {
     let [piece, pos] = _.split('@')
 
@@ -152,8 +150,6 @@ function make_board(board: Board) {
     if (instant_track) {
       _p.vs = i_vpos_vs(instant_v_pos)
     }
-    console.log(i_vpos_vs(instant_v_pos), _p.vs)
-
     let res = make_piece(board, _, v_pos, _p)
 
 

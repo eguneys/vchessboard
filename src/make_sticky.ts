@@ -23,10 +23,8 @@ export function make_sticky_pos<Item>(free: Array<Pos>) {
       return _.pop()
     } else {
       let res = free.pop()
-      if (instant_track) {
-        res.x = v.x
-        res.y = v.y
-      }
+      res.x = v.x
+      res.y = v.y
       return res
     }
   }
